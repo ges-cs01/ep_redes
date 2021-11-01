@@ -29,9 +29,9 @@ class ClientThread extends Thread {
 
     public void run() {
         String fileName;
-        while(true) {
-            try {
-                String input = dataIn.readUTF();
+	try {
+                while (true) {
+		String input = dataIn.readUTF();
 
                 if(input.equals("FILE_SENT_FROM_CLIENT")) {
                     fileName = dataIn.readUTF();
@@ -66,9 +66,9 @@ class ClientThread extends Thread {
                     System.out.println("Error at server");
                 }
             }
+	}
             catch(Exception ex) {
                 ex.printStackTrace();
             }
-        }
     }
 }
