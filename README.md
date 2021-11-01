@@ -22,7 +22,7 @@ Execute em um terminal o servidor:
 
     java Server
     
-Em outro servidor ou máquina execute o cliente:
+Em outro terminal ou máquina execute o cliente:
 
     java Client
 
