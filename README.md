@@ -6,7 +6,7 @@ Programa que realiza via rede em um modelo cliente-servidor a troca de arquivos 
 
 Faça o download do arquivo .zip ou clone localmente o repositório.
 
-    git clone https://github.com/ges-cs01/ep_redes
+    git clone https://github.com/ges-cs01/ep_redes.git
 
 ## Compilação
 Vá até o diretório /servidor e compile com o comando:
