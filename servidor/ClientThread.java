@@ -59,9 +59,21 @@ class ClientThread extends Thread {
 
                     dataOut.writeInt(fileBytes.length);
                     dataOut.write(fileBytes);
-                } else if(input.equals("EXIT")) {
+                } else if(input.equals("LIST_SERVER_FILES")){
+                    File dir = new File("../servidor/Files");
+                    File[] listOfFiles = dir.listFiles();
+                    String resp = "";
+
+                    for(File file : listOfFiles) {
+                        if (file.isFile()) {
+                            resp += "\t"+ file.getName() +"\t| "+ file.length() + " bytes\n";
+                            System.out.println("\t" + file.getName() + "\t" + file.length() + " bytes");
+                        }
+                    }
+
+                    dataOut.writeUTF(resp);
+                }else if(input.equals("EXIT")) {
                     clientSocket.close();
-                    System.exit(0);
                 } else {
                     System.out.println("Error at server");
                 }

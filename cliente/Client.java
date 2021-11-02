@@ -156,7 +156,7 @@ public class Client {
     /*
     	listFilesClient() imprime na tela os arquivos que estao no diretorio do cliente.
     */
-    public void listFilesClient() {
+      public void listFilesClient() {
         File dir = new File("../cliente/Files");
         File[] listOfFiles = dir.listFiles();
 
@@ -176,18 +176,18 @@ public class Client {
     	listFilesServer() imprime na tela os arquivos que estao no diretorio do servidor.
     */
     public void listFilesServer() {
-        File dir = new File("../servidor/Files");
-        File[] listOfFiles = dir.listFiles();
+        String resp = "No files found";
 
+        try {
+            dataOut.writeUTF("LIST_SERVER_FILES");
+            resp = dataIn.readUTF();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+		
         System.out.println("-------------------------------------");
         System.out.println("File list from Server:\n");
-
-        for(File file : listOfFiles) {
-            if (file.isFile()) {
-                System.out.println("\t" + file.getName() + "\t" + humanReadableByteCountBin(file.length()));
-            }
-        }
-
+        System.out.println(resp);
         System.out.println("\n-------------------------------------");
     }
 
