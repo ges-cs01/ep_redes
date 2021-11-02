@@ -175,19 +175,19 @@ public class Client {
     /*
     	listFilesServer() imprime na tela os arquivos que estao no diretorio do servidor.
     */
-    public void listFilesServer() {
-        String resp = "No files found";
+    public void listFilesServer() throws IOException {
+        dataOut.writeUTF("LIST_SERVER_FILES");
+        int filesListLength = dataIn.readInt();
 
-        try {
-            dataOut.writeUTF("LIST_SERVER_FILES");
-            resp = dataIn.readUTF();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-		
         System.out.println("-------------------------------------");
         System.out.println("File list from Server:\n");
-        System.out.println(resp);
+
+        for(int i = 0; i < filesListLength; i++) {
+            String fileData = dataIn.readUTF();
+            long size = dataIn.readLong();
+            System.out.print("\t" + fileData + " " + humanReadableByteCountBin(size) + "\n");
+        }
+
         System.out.println("\n-------------------------------------");
     }
 

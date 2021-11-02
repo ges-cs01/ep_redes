@@ -32,8 +32,10 @@ class ClientThread extends Thread {
 	try {
                 while (true) {
 		String input = dataIn.readUTF();
+		System.out.println("Log - command received: " + input);
 
                 if(input.equals("FILE_SENT_FROM_CLIENT")) {
+		    System.out.println();
                     fileName = dataIn.readUTF();
                     if (fileName.length() > 0) {
                         fileOut = new FileOutputStream("../servidor/Files/"+fileName);
@@ -46,6 +48,7 @@ class ClientThread extends Thread {
 
                         fileOut.close();
                     }
+                    
                 } else if(input.equals("DOWNLOAD_FILE")) {
                     fileName = dataIn.readUTF();
                     File file = new File("../servidor/Files/"+fileName);
@@ -59,21 +62,28 @@ class ClientThread extends Thread {
 
                     dataOut.writeInt(fileBytes.length);
                     dataOut.write(fileBytes);
+                    
                 } else if(input.equals("LIST_SERVER_FILES")){
                     File dir = new File("../servidor/Files");
                     File[] listOfFiles = dir.listFiles();
-                    String resp = "";
+
+                    int files_length = listOfFiles.length;
+                    dataOut.writeInt(files_length);
 
                     for(File file : listOfFiles) {
                         if (file.isFile()) {
-                            resp += "\t"+ file.getName() +"\t| "+ file.length() + " bytes\n";
-                            System.out.println("\t" + file.getName() + "\t" + file.length() + " bytes");
+                            String name = file.getName();
+                            long size = file.length();
+                            dataOut.writeUTF(name);
+                            dataOut.writeLong(size);
                         }
                     }
-
-                    dataOut.writeUTF(resp);
-                }else if(input.equals("EXIT")) {
+                    
+                } else if(input.equals("EXIT")) {
                     clientSocket.close();
+		    System.out.println("Server is offline.\n Exiting...");
+		    System.exit(0);
+                    
                 } else {
                     System.out.println("Error at server");
                 }
