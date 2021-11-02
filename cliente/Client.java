@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.io.*;
 import java.net.Socket;
 import java.text.*;
-import java.util.*;
 
 public class Client {
     public Socket clientSocket;
@@ -21,11 +20,8 @@ public class Client {
     public static void main(String[]args) {
         Client client = new Client();
         client.connect();
-        client.display();
     }
-    /*
-    	connect() faz a conexao via socket com o servidor
-    */
+
     public void connect() {
         try {
             InputStreamReader inStream = new InputStreamReader(System.in);
@@ -39,14 +35,8 @@ public class Client {
             ex.printStackTrace();
             System.out.println("Error: unable to connect to server\n");
         }
-    }
-    
-    /*
-    	display() apresenta o menu principal do programa e as operacoes a serem realizadas
-	que incluem o upload ou download de um arquivo
-    */
-    public void display() {
-    	while(true) {
+
+        while(true) {
             try {
                 System.out.println(
                         "Options:\n \n\t1. Upload file to server \n\t2. Download file from server \n\t3. List files in Client \n\t4. List files in Server\n\t5. Quit \n\t\n> Type the number of your choice: "
@@ -83,11 +73,11 @@ public class Client {
         }
     }
 
-
     /*
-    	uploadFile() eh responsavel por fazer o upload de um arquivo do cliente para
-    	o servidor.
-    */
+     * uploadFile() eh responsavel por fazer o upload de um arquivo do cliente para
+     * o servidor
+     *
+     */
     public void uploadFile() {
         try {
             if (fileToSend[0] != null) {
@@ -113,27 +103,24 @@ public class Client {
     }
 
     /*
-    	downloadFile() eh responsavel por fazer o download de um arquivo do servidor
-	para o cliente
-    */
+     * downloadFile() eh responsavel por fazer o download de um arquivo do servidor
+     * para o cliente
+     */
     public void downloadFile() {
         try {
+            String fileName = "";
             String fileData = "";
             System.out.println("Enter the file name: ");
-
-	    Scanner in = new Scanner(System.in);
-	    String fileName;
-	    fileName = in.nextLine();
+            fileName = bufReader.readLine();
 			
             dataOut.writeUTF("DOWNLOAD_FILE");
             dataOut.writeUTF(fileName);
+			
+            fileData = dataIn.readUTF();
 
-	    fileData = dataIn.readUTF();
-
-            if (fileName.equals("")) {
+            if (fileData.equals("")) {
                 System.out.println("\n[-]No such file\n");
             }
-
             else {
                 fileOut = new FileOutputStream("../cliente/Files/"+fileName);
                 int fileContentLength = dataIn.readInt();
@@ -147,15 +134,11 @@ public class Client {
                 fileOut.close();
                 System.out.println("\n[+] File download successfully!\n");
             }
-
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
-    
-    /*
-    	listFilesClient() imprime na tela os arquivos que estao no diretorio do cliente.
-    */
+
     public void listFilesClient() {
         File dir = new File("../cliente/Files");
         File[] listOfFiles = dir.listFiles();
@@ -165,45 +148,35 @@ public class Client {
 
         for(File file : listOfFiles) {
             if (file.isFile()) {
-                System.out.println("\t" + file.getName() + "\t" + humanReadableByteCountBin(file.length()));
+                System.out.println("\t" + file.getName() + "\t" + file.length() + " bytes");
             }
         }
 
         System.out.println("\n-------------------------------------");
     }
 
-    /*
-    	listFilesServer() imprime na tela os arquivos que estao no diretorio do servidor.
-    */
     public void listFilesServer() {
-        File dir = new File("../servidor/Files");
-        File[] listOfFiles = dir.listFiles();
+        String resp = "No files found";
 
+        try {
+            dataOut.writeUTF("LIST_SERVER_FILES");
+            resp = dataIn.readUTF();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+		
         System.out.println("-------------------------------------");
         System.out.println("File list from Server:\n");
-
-        for(File file : listOfFiles) {
-            if (file.isFile()) {
-                System.out.println("\t" + file.getName() + "\t" + humanReadableByteCountBin(file.length()));
-            }
-        }
-
+        System.out.println(resp);
         System.out.println("\n-------------------------------------");
     }
 
-    /*
-    	quit() nao receve argumentos e eh simplesmente utilizada para encerrar o programa.
-    */
     public void quit() throws IOException {
         dataOut.writeUTF("EXIT");
         clientSocket.close();
         System.exit(0);
     }
     
-    /*
-    	chooseFile() abre uma GUI para que o arquivo a ser upado no servidor
-    	seja escolhido
-    */
     public void chooseFile(){
         JFileChooser jFileChooser = new JFileChooser();
         jFileChooser.setDialogTitle("Choose a file to send.");
@@ -211,17 +184,7 @@ public class Client {
             fileToSend[0] = jFileChooser.getSelectedFile();
         }
     }
-
-    /*
-     	humanReadableByteCountBin() eh utilizada para fazer a conversao
-     	e apresentar a contagem de bytes de um arquivo de forma humanamente
-     	legivel.
-
-     	recebe como argumento uma variavel do tipo long que representa a contagem
-     	dos bytes e retorna uma String formatada de modo mais apropriado.
-
-     	fonte: https://stackoverflow.com/questions/3758606/how-can-i-convert-byte-size-into-a-human-readable-format-in-java/47037629#47037629
-    */ 
+    
     public static String humanReadableByteCountBin(long bytes) {
 	long absB = bytes == Long.MIN_VALUE ? Long.MAX_VALUE : Math.abs(bytes);
         
