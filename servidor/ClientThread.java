@@ -35,7 +35,6 @@ class ClientThread extends Thread {
 		System.out.println("Log - command received: " + input);
 
                 if(input.equals("FILE_SENT_FROM_CLIENT")) {
-		    System.out.println();
                     fileName = dataIn.readUTF();
                     if (fileName.length() > 0) {
                         fileOut = new FileOutputStream("../servidor/Files/"+fileName);
