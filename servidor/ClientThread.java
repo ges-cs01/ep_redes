@@ -29,9 +29,9 @@ class ClientThread extends Thread {
 
     public void run() {
         String fileName;
-        while(true) {
-            try {
-                String input = dataIn.readUTF();
+	try {
+                while (true) {
+		String input = dataIn.readUTF();
 
                 if(input.equals("FILE_SENT_FROM_CLIENT")) {
                     fileName = dataIn.readUTF();
@@ -59,19 +59,6 @@ class ClientThread extends Thread {
 
                     dataOut.writeInt(fileBytes.length);
                     dataOut.write(fileBytes);
-                } else if(input.equals("LIST_SERVER_FILES")){
-                    File dir = new File("../servidor/Files");
-                    File[] listOfFiles = dir.listFiles();
-                    String resp = "";
-
-                    for(File file : listOfFiles) {
-                        if (file.isFile()) {
-                            resp += "\t"+ file.getName() +"\t| "+ file.length() + " bytes\n";
-                            System.out.println("\t" + file.getName() + "\t" + file.length() + " bytes");
-                        }
-                    }
-
-                    dataOut.writeUTF(resp);
                 } else if(input.equals("EXIT")) {
                     clientSocket.close();
                     System.exit(0);
@@ -79,9 +66,9 @@ class ClientThread extends Thread {
                     System.out.println("Error at server");
                 }
             }
+	}
             catch(Exception ex) {
                 ex.printStackTrace();
             }
-        }
     }
 }
