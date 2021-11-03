@@ -130,7 +130,7 @@ public class Client {
 
 	    fileData = dataIn.readUTF();
 
-            if (fileName.equals("")) {
+            if (fileData.equals("")) {
                 System.out.println("\n[-]No such file\n");
             }
 
@@ -156,7 +156,7 @@ public class Client {
     /*
     	listFilesClient() imprime na tela os arquivos que estao no diretorio do cliente.
     */
-      public void listFilesClient() {
+	public void listFilesClient() {
         File dir = new File("../cliente/Files");
         File[] listOfFiles = dir.listFiles();
 
@@ -223,7 +223,7 @@ public class Client {
      	fonte: https://stackoverflow.com/questions/3758606/how-can-i-convert-byte-size-into-a-human-readable-format-in-java/47037629#47037629
     */ 
     public static String humanReadableByteCountBin(long bytes) {
-	long absB = bytes == Long.MIN_VALUE ? Long.MAX_VALUE : Math.abs(bytes);
+		long absB = bytes == Long.MIN_VALUE ? Long.MAX_VALUE : Math.abs(bytes);
         
         if (absB < 1024) {
             return bytes + " B";

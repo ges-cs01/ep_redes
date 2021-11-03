@@ -24,7 +24,7 @@ public class Server {
                 ct.start();
             }
         }
-        catch(Exception ex) {
+        catch(Exception ex){
             ex.printStackTrace();
         }
     }
