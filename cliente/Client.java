@@ -30,7 +30,7 @@ public class Client {
         try {
             InputStreamReader inStream = new InputStreamReader(System.in);
             bufReader = new BufferedReader(inStream);
-            clientSocket = new Socket("localhost", port);
+            clientSocket = new Socket("192.168.122.39", port);
 
             dataIn = new DataInputStream(clientSocket.getInputStream());
             dataOut = new DataOutputStream(clientSocket.getOutputStream());
